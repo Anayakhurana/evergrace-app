@@ -28,16 +28,19 @@ Query layer: In src/lib/queries.ts, getVideoDetail() retrieves a video and relat
 
 Presentation layer: The video detail page at src/app/library/[videoId]/page.tsx presents the appropriate interface for the video's access state. The architecture documentation describes a locked presentation for inaccessible videos and a player presentation for videos the viewer can access.
 
-Actions layer: The application has action files under src/actions/, including admin-video.ts. This file should only be described as part of this feature if its actual functions participate in the video-access workflow. Administrative video-management actions are not necessarily responsible for deciding whether a member can watch a video.
-
+Actions layer: Actions layer: The application defines server actions under src/actions/ for operations that modify application data. However, the access decision described here is made by canView() in the domain layer and enforced by getVideoDetail() in the query layer. I would need to inspect the relevant action functions to establish whether a specific action participates in this video-access workflow.
 Together, these layers keep the access rule separate from database queries and user-interface rendering. The query layer also protects playback references on the server rather than relying only on hiding a play button.
 
 3. What Next.js and Prisma Provide
 
-Next.js provides routing, server rendering, Server Actions, Route Handlers, and revalidation facilities. These features reduce the amount of web-application infrastructure developers need to implement themselves. Prisma provides a database client and a structured way to query and modify records using the application's data model. 
-However, these tools do not automatically define the application's business rules or guaran
+### 3. What Next.js and Prisma Do Automatically
+
+Next.js provides routing, server rendering, Server Actions, Route Handlers, and revalidation facilities. These features reduce the amount of web-application infrastructure developers need to implement themselves. Prisma provides a database client and a structured way to query and modify records using the application's data model.
+
+However, these tools do not automatically define the application's business rules or guarantee that every operation is authorized correctly. Developers must implement and maintain the application's validation, authorization checks, and access-control logic. For example, the canView() function in src/lib/domain.ts defines which subscription plans can access particular videos, while getVideoDetail() in src/lib/queries.ts prevents playback references from being returned for locked videos.
 
 4. What Would Need to Be Built Without a Framework?
 
-Without a framework such as Next.js, developers would need to implement more request-handling infrastructure themselves, including URL routing and coordination between server-side logic and the user interface. They would also need to establish database-access patterns and maintain type definitions or equivalent data structures.
-Next.js and Prisma reduce this work by providing reusable infrastructure and abstractions. Developers would still be responsible for the application's business logic, access-control decisions, security, and correctness.
+### 4. What Would Need to Be Built Without a Framework?
+
+Without a framework such as Next.js, developers would need to implement more of the application's web infrastructure themselves, including URL routing, request handling, and coordination between server-side logic and the user interface. They would also need to establish reliable patterns for database access, input validation, error handling, and authorization. Without Prisma, developers could use a database driver and write SQL queries manually, while managing query parameters and mapping database results to application data structures. Frameworks and libraries reduce this infrastructure work, but developers remain responsible for implementing the application's business logic, security checks, and correct behavior.
