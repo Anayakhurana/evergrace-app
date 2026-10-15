@@ -31,7 +31,7 @@ Presentation layer: The video detail page at src/app/library/[videoId]/page.tsx 
 Actions layer: Actions layer: The application defines server actions under src/actions/ for operations that modify application data. However, the access decision described here is made by canView() in the domain layer and enforced by getVideoDetail() in the query layer. I would need to inspect the relevant action functions to establish whether a specific action participates in this video-access workflow.
 Together, these layers keep the access rule separate from database queries and user-interface rendering. The query layer also protects playback references on the server rather than relying only on hiding a play button.
 
-3. What Next.js and Prisma Provide
+
 
 ### 3. What Next.js and Prisma Do Automatically
 
@@ -39,7 +39,6 @@ Next.js provides routing, server rendering, Server Actions, Route Handlers, and 
 
 However, these tools do not automatically define the application's business rules or guarantee that every operation is authorized correctly. Developers must implement and maintain the application's validation, authorization checks, and access-control logic. For example, the canView() function in src/lib/domain.ts defines which subscription plans can access particular videos, while getVideoDetail() in src/lib/queries.ts prevents playback references from being returned for locked videos.
 
-4. What Would Need to Be Built Without a Framework?
 
 ### 4. What Would Need to Be Built Without a Framework?
 
