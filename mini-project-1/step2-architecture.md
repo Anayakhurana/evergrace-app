@@ -35,18 +35,17 @@ Components (src/components/): Presents information to users through the interfac
 
 ### 2. Tracing a Feature: Video Access Control
 
+The Follow/Unfollow feature allows members to follow categories, instructors (masters), and levels. The feature uses all four architecture layers to enforce the paid-plan rule, read and update follow data, and display the result on the dashboard.
 
-The video access feature demonstrates how the application separates business rules from database access and presentation.
+**Domain layer — src/lib/domain.ts:** The canFollow() function checks whether a user's plan allows following. It returns false for BASIC and true for MEMBER and PREMIUM plans. This centralizes the business rule.
 
-**Domain layer:** In src/lib/domain.ts, the canView() function compares the viewer's plan rank with the video's access-level rank. Basic viewers can access free videos, members can access free and members-only videos, and premium viewers can access all access levels. Administrators can view videos regardless of access level. Signed-out visitors are treated as Basic viewers.
+**Queries layer — src/lib/queries.ts:** The dashboard query retrieves the user's existing follow records using prisma.follow.findMany(). It compares those records with the available categories, masters, and levels, then prepares the follows data used by the dashboard to show which items the user follows.
 
-**Query layer:** In src/lib/queries.ts, getVideoDetail() retrieves a video and related information using Prisma. It calls toCard() to obtain the video's card data, including its locked status. If the video is locked, the function returns null for sourceUrl and muxPlaybackId, preventing the client from receiving those playback references.
+**Actions layer — src/actions/member.ts:** The toggleFollow() function checks the signed-in viewer, validates the input with followSchema, and calls canFollow() to enforce the paid-plan rule on the server. If the follow record already exists, it deletes it; otherwise, it creates a new record using Prisma.
 
-**Actions layer:** The application defines server actions under src/actions/ for operations that change application data. However, the access decision in this feature is made by canView() in the domain layer and enforced by getVideoDetail() in the query layer. I could not confirm a specific server action that participates directly in this video-access workflow, so I have not attributed the access decision to an unrelated action.
+**Components layer — src/components/follow-chips.tsx:** The FollowChips component displays the categories, masters, and levels the user can follow. It uses canFollow() to disable following for BASIC users and show an upgrade prompt. When an eligible user selects a chip, the component calls toggleFollow().
 
-**Presentation layer:** The video detail page at src/app/library/[videoId]/page.tsx presents the appropriate interface for the video's access state. The architecture documentation describes a locked presentation for inaccessible videos and a player presentation for videos the viewer can access.
-
-Together, these layers keep the access rule separate from database queries and user-interface rendering. The query layer also protects playback references on the server rather than relying only on hiding a play button.
+The four layers work together to keep the business rule separate from data retrieval, data changes, and presentation. The server-side action checks the paid-plan restriction even if someone attempts to bypass the disabled user-interface control.
 
 
 ### 3. What Next.js and Prisma Do Automatically
