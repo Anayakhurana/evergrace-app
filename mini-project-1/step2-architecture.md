@@ -5,7 +5,7 @@ Student ID: 300215854
 Course: COMP 370
 Project: Mini-Project 1 — Track A: Development
 
-1. Four Architecture Layers
+### 1. Four Architecture Layers
 
 Domain (src/lib/domain.ts): Defines application business rules and calculations. For example, canView() checks whether a viewer's subscription plan allows access to a video.
 
@@ -18,7 +18,7 @@ Components (src/components/): Presents information to users through the interfac
 Domain → Queries → Actions → Components
 
 
-2. Tracing a Feature: Video Access Control
+### 2. Tracing a Feature: Video Access Control
 
 The video access feature demonstrates how the application separates business rules from database access and presentation.
 
