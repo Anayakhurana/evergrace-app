@@ -15,26 +15,7 @@ Actions (src/actions/): Handles operations that change application data. Actions
 
 Components (src/components/): Presents information to users through the interface, including video players and locked-video messages.
 
-┌──────────────────────────────────────────────┐
-│ DOMAIN — src/lib/domain.ts                   │
-│ Defines business rules and logic             │
-└──────────────────────┬───────────────────────┘
-                       ↓
-┌──────────────────────────────────────────────┐
-│ QUERIES — src/lib/queries.ts                 │
-│ Reads database data and prepares results     │
-└──────────────────────┬───────────────────────┘
-                       ↓
-┌──────────────────────────────────────────────┐
-│ ACTIONS — src/actions/                       │
-│ Validates, authorizes, and changes data      │
-└──────────────────────┬───────────────────────┘
-                       ↓
-┌──────────────────────────────────────────────┐
-│ COMPONENTS — src/components/                 │
-│ Displays the user interface                  │
-└──────────────────────────────────────────────┘
-
+Domain → Queries → Actions → Components
 
 
 2. Tracing a Feature: Video Access Control
