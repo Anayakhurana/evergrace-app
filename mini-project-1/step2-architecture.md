@@ -33,8 +33,7 @@ Components (src/components/): Presents information to users through the interfac
 | Displays the user interface. |
 
 
-### 2. Tracing a Feature: Video Access Control
-
+### 2. Tracing a Feature: Follow/Unfollow
 The Follow/Unfollow feature allows members to follow categories, instructors (masters), and levels. The feature uses all four architecture layers to enforce the paid-plan rule, read and update follow data, and display the result on the dashboard.
 
 **Domain layer — src/lib/domain.ts:** The canFollow() function checks whether a user's plan allows following. It returns false for BASIC and true for MEMBER and PREMIUM plans. This centralizes the business rule.
