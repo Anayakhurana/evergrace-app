@@ -1,4 +1,4 @@
-Step 2: Architecture
+### Step 2: Architecture
 
 Student name: Anaya Khurana
 Student ID: 300215854
@@ -15,22 +15,32 @@ Actions (src/actions/): Handles operations that change application data. Actions
 
 Components (src/components/): Presents information to users through the interface, including video players and locked-video messages.
 
-Domain → Queries → Actions → Components
+
+flowchart TD
+    A["DOMAIN — src/lib/domain.ts<br/>Defines business rules and decisions"]
+    B["QUERIES — src/lib/queries.ts<br/>Reads database data and prepares results"]
+    C["ACTIONS — src/actions/<br/>Validates, authorizes, and changes data"]
+    D["COMPONENTS — src/components/<br/>Displays the user interface"]
+
+    A --> B
+    B --> C
+    C --> D
 
 
 ### 2. Tracing a Feature: Video Access Control
+ontrol
 
 The video access feature demonstrates how the application separates business rules from database access and presentation.
 
-Domain layer: In src/lib/domain.ts, the canView() function compares the viewer's plan rank with the video's access-level rank. Basic viewers can access free videos, members can access free and members-only videos, and premium viewers can access all access levels. Administrators can view videos regardless of access level. Signed-out visitors are treated as Basic viewers.
+**Domain layer:** In src/lib/domain.ts, the canView() function compares the viewer's plan rank with the video's access-level rank. Basic viewers can access free videos, members can access free and members-only videos, and premium viewers can access all access levels. Administrators can view videos regardless of access level. Signed-out visitors are treated as Basic viewers.
 
-Query layer: In src/lib/queries.ts, getVideoDetail() retrieves a video and related information using Prisma. It calls toCard() to obtain the video's card data, including its locked status. If the video is locked, the function returns null for sourceUrl and muxPlaybackId, preventing the client from receiving those playback references.
+**Query layer:** In src/lib/queries.ts, getVideoDetail() retrieves a video and related information using Prisma. It calls toCard() to obtain the video's card data, including its locked status. If the video is locked, the function returns null for sourceUrl and muxPlaybackId, preventing the client from receiving those playback references.
 
-Presentation layer: The video detail page at src/app/library/[videoId]/page.tsx presents the appropriate interface for the video's access state. The architecture documentation describes a locked presentation for inaccessible videos and a player presentation for videos the viewer can access.
+**Actions layer:** The application defines server actions under src/actions/ for operations that change application data. However, the access decision in this feature is made by canView() in the domain layer and enforced by getVideoDetail() in the query layer. I could not confirm a specific server action that participates directly in this video-access workflow, so I have not attributed the access decision to an unrelated action.
 
-Actions layer: Actions layer: The application defines server actions under src/actions/ for operations that modify application data. However, the access decision described here is made by canView() in the domain layer and enforced by getVideoDetail() in the query layer. I would need to inspect the relevant action functions to establish whether a specific action participates in this video-access workflow.
+**Presentation layer:** The video detail page at src/app/library/[videoId]/page.tsx presents the appropriate interface for the video's access state. The architecture documentation describes a locked presentation for inaccessible videos and a player presentation for videos the viewer can access.
+
 Together, these layers keep the access rule separate from database queries and user-interface rendering. The query layer also protects playback references on the server rather than relying only on hiding a play button.
-
 
 
 ### 3. What Next.js and Prisma Do Automatically
