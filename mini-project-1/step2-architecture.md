@@ -15,6 +15,11 @@ Actions (src/actions/): Handles operations that change application data. Actions
 
 Components (src/components/): Presents information to users through the interface, including video players and locked-video messages.
 
+
+Domain → Queries → Actions → Components
+
+
+
 2. Tracing a Feature: Video Access Control
 
 The video access feature demonstrates how the application separates business rules from database access and presentation.
