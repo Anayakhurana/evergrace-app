@@ -16,7 +16,7 @@ A SafetyFlag belongs to a specific Video and has no meaningful purpose without t
 
 ## 2. SafetyFlag — SafetyAuditLog
 
-**Relationship Type:** Composition
+**Relationship Type:** Association
 
 **Multiplicity:** SafetyFlag (1) — SafetyAuditLog (0..*)
 
@@ -26,7 +26,7 @@ A SafetyFlag belongs to a specific Video and has no meaningful purpose without t
 
 **Justification:**
 
-A SafetyAuditLog entry records changes made to a specific SafetyFlag. The audit entry is associated with that flag and does not have an independent purpose without it. Therefore, this relationship is composition.
+A SafetyAuditLog entry records changes made to a specific SafetyFlag. However, audit records must be preserved as permanent history, even if a safety flag is removed. Therefore, the audit log should exist independently of the SafetyFlag, making association the appropriate relationship.
 
 ## 3. User — SafetyFlag
 
